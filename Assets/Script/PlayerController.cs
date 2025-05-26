@@ -1,7 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.InputSystem.XR;
-using NUnit.Framework;
+
 using System.Collections.Generic;
 
 
@@ -51,7 +50,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+  /*  void Update()
     {
         if (!PV.IsMine)
             return;
@@ -116,5 +115,5 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
 
-    }
+    }*/
 }

@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+
 public class Manager1 : MonoBehaviour
 {
     public List<AvatarSelect> avatarSelect;
@@ -15,10 +16,17 @@ public class Manager1 : MonoBehaviour
     public Button nextBtn;
     public Transform armachuture;
     public Animator charAvatar;
-    
+    //PhotonView PV;
+   
+
     void Start()
     {
         AvatarUIData();
+    }
+    private void Awake()
+    {
+        
+        //PV = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -84,12 +92,14 @@ public class Manager1 : MonoBehaviour
 
     public void SelectAvatar()
     {
+       // if (!PV.IsMine)
+          //  return;
         selectedAvatar = avatarSelect[yourAvatarId - 1];
 
-        charAvatar.avatar = selectedAvatar.avatar;
+       // charAvatar.avatar = selectedAvatar.avatar;
 
-        GameObject mesh = Instantiate(selectedAvatar.mesh.gameObject, armachuture);
-        mesh.transform.localPosition = Vector3.zero;
+       // GameObject mesh = Instantiate(selectedAvatar.mesh.gameObject, armachuture);
+       // mesh.transform.localPosition = Vector3.zero;
     }
         
 }

@@ -2,9 +2,9 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
-using NUnit.Framework;
 using System.Collections.Generic;
 
+using System.IO;
 public class Manager : MonoBehaviourPunCallbacks
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,7 +19,15 @@ public class Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject playerListItemPrefab;
     [SerializeField] GameObject startGameButton;
     [SerializeField] GameObject errorMenu;
+    [SerializeField] GameObject chatMenu;
     public Manager1 managerref1;
+    public GameObject bgImage;
+    public GameObject cameras;
+    public GameObject canvas;
+    public GameObject canvasGame;
+
+
+
 
     public static Manager Instance;
     private int i;
@@ -103,6 +111,7 @@ public class Manager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print("onJoinedRoom");
+      
         MenuManager.Instance.OpenMenu("room");
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         Player[] players = PhotonNetwork.PlayerList;
@@ -127,10 +136,21 @@ public class Manager : MonoBehaviourPunCallbacks
         errorText.text = "Room Creation Failed" + message;
         MenuManager.Instance.OpenMenu("error");
     }
-    public void StartGame()
+    public void CallStartGame()
     {
+
+        photonView.RPC("StartGame",RpcTarget.All);
+    }
+    [PunRPC]
+    void StartGame()
+    {
+      //  bgImage.GetComponent<Image>.Disable(false);
         MenuManager.Instance.OpenMenu("loading");
-        PhotonNetwork.LoadLevel(1);
+        cameras.SetActive(false);
+        canvas.SetActive(false);
+        canvasGame.SetActive(true);
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+        // PhotonNetwork.LoadLevel(1);
     }
     public void LeaveRoom()
     {

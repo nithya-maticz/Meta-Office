@@ -1,7 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
-using UnityEditor.VersionControl;
+
 public class Chat : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -10,6 +10,7 @@ public class Chat : MonoBehaviour
     public GameObject content;
     public void SendMessage()
     {
+        Debug.Log("sendessage");
         GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, (PhotonNetwork.NickName +" : " + inputField.text));
         inputField.text = "";
     }

@@ -1,7 +1,9 @@
 ﻿ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using Photon.Pun;
 #endif
+
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -98,6 +100,7 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -109,6 +112,8 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+
+        PhotonView PV;
 
         private bool IsCurrentDeviceMouse
         {
@@ -126,6 +131,7 @@ namespace StarterAssets
         private void Awake()
         {
             // get a reference to our main camera
+            PV = GetComponent<PhotonView>();
             if (_mainCamera == null)
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -154,6 +160,9 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (!PV.IsMine)
+                return;
+
             _hasAnimator = TryGetComponent(out _animator);
 
             JumpAndGravity();
