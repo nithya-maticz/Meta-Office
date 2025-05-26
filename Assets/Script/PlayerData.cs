@@ -6,6 +6,8 @@ public class PlayerData : MonoBehaviour
     public Transform geometry;
     public Animator charAvatar;
     public Manager1 manager;
+    public GameObject playerCamera;
+    public GameObject cinemachine;
 
     Rigidbody rb;
     PhotonView PV;
@@ -23,7 +25,7 @@ public class PlayerData : MonoBehaviour
     private void Awake()
     {
         manager = FindAnyObjectByType<Manager1>();
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         PV = GetComponent<PhotonView>();
 
         charAvatar.avatar = manager.selectedAvatar.avatar;
@@ -32,5 +34,18 @@ public class PlayerData : MonoBehaviour
 
         charAvatar.gameObject.SetActive(false);
         charAvatar.gameObject.SetActive(true);
+
+        if (PV.IsMine)
+        {
+            playerCamera.SetActive(true);
+            cinemachine.SetActive(true);
+        }
+            
+        else
+        {
+            playerCamera.SetActive(false);
+            cinemachine.SetActive(false);
+        }
+           
     }
 }
