@@ -160,19 +160,26 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (!PV.IsMine)
-                return;
-
             _hasAnimator = TryGetComponent(out _animator);
-
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
+            if (!PV.IsMine)
+            {
+                _mainCamera.gameObject.SetActive(false);
+            }
+            else
+            {
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+            }
+                
+            
         }
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if (PV.IsMine)
+                CameraRotation();
+
         }
 
         private void AssignAnimationIDs()
