@@ -3,6 +3,7 @@ using System;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Cinemachine;
 
 
 public class Manager1 : MonoBehaviour
@@ -16,6 +17,7 @@ public class Manager1 : MonoBehaviour
     public Button nextBtn;
     public Transform armachuture;
     public Animator charAvatar;
+    public CinemachineVirtualCamera cv;
     //PhotonView PV;
    
 
