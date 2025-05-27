@@ -25,6 +25,11 @@ public class Manager : MonoBehaviourPunCallbacks
     public GameObject cameras;
     public GameObject canvas;
     public GameObject canvasGame;
+    public RoomInfo info;
+    [SerializeField] TMP_Text hostName;
+    [SerializeField] TMP_Text roomCodeText;
+    public string currentRoomCode;
+    [SerializeField] TMP_InputField roomCodeInput1;
 
 
 
@@ -103,7 +108,7 @@ public class Manager : MonoBehaviourPunCallbacks
         {
             return;
         }
-        PhotonNetwork.CreateRoom(roomnameInputField.text);
+        PhotonNetwork.CreateRoom(roomnameInputField.text + Random.Range(1000, 9999));
 
         MenuManager.Instance.OpenMenu("loading");
     }
@@ -113,22 +118,29 @@ public class Manager : MonoBehaviourPunCallbacks
         print("onJoinedRoom");
       
         MenuManager.Instance.OpenMenu("room");
-        roomNameText.text = PhotonNetwork.CurrentRoom.Name;
-        Player[] players = PhotonNetwork.PlayerList;
-        foreach(Transform child in playerListContent)
-        {
-            Destroy(child.gameObject);
-        }
-        for (i = 0; i < players.Length; i++)
-        {
-            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+       // roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
-        }
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        LobbyDetails();
+
+        string fullRoomName = PhotonNetwork.CurrentRoom.Name;
+        string trimmedRoomName = fullRoomName.Length > 4
+            ? fullRoomName.Substring(0, fullRoomName.Length - 4)
+            : fullRoomName;
+
+        roomNameText.text = trimmedRoomName;
+       
+        print("Room Name : " + PhotonNetwork.CurrentRoom.Name);
+
+        string fullRoomcode = PhotonNetwork.CurrentRoom.Name;
+        string lastFour = fullRoomName.Length >= 4
+            ? fullRoomName.Substring(fullRoomName.Length - 4)
+            : fullRoomName;
+
+        roomCodeText.text = "Room Code: " + lastFour;
     }
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        LobbyDetails();
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -200,5 +212,36 @@ public class Manager : MonoBehaviourPunCallbacks
         errorMenu.SetActive(false);
     }
 
+    public void LobbyDetails()
+    {
+        Player[] players = PhotonNetwork.PlayerList;
+        foreach (Transform child in playerListContent)
+        {
+            Destroy(child.gameObject);
+        }
 
+        for (i = 0; i < players.Length; i++)
+        {
+            if (players[i] == PhotonNetwork.MasterClient)
+            {
+                print("Host Name : " + players[i].NickName);
+                hostName.text = players[i].NickName;
+            }
+            else
+            {
+                Debug.Log("Not Master Client");
+                Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
+            }
+        }
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+    }
+    public void JoinFun()
+    {
+        if(roomCodeInput1.text==currentRoomCode)
+        {
+            JoinRoom(info);
+        }
+        
+
+    }
 }
