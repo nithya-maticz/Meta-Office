@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using TMPro;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
@@ -107,6 +108,9 @@ namespace StarterAssets
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
 
+        public TMP_Text nickName;
+        public GameObject canvas;
+
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
@@ -131,7 +135,7 @@ namespace StarterAssets
         {
             // get a reference to our main camera
 
-            
+            nickName.text = PhotonNetwork.NickName;
             if (_mainCamera == null)
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -143,6 +147,8 @@ namespace StarterAssets
             {
                 manager = FindAnyObjectByType<Manager1>();
                 manager.cv.Follow = CinemachineCameraTarget.transform;
+                canvas.SetActive(false);
+
             }
             
             

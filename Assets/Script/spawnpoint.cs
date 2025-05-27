@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class spawnpoint : MonoBehaviour
 {
-    [SerializeField] GameObject graphics;
+   // [SerializeField] GameObject graphics;
     private void Awake()
     {
-        graphics.SetActive(false);
+       // graphics.SetActive(false);
     }
 }
