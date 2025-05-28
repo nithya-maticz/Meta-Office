@@ -25,6 +25,7 @@ public class Manager : MonoBehaviourPunCallbacks
     public GameObject cameras;
     public GameObject canvas;
     public GameObject canvasGame;
+    public GameObject chatButton;
     public RoomInfo info;
     [SerializeField] TMP_Text hostName;
     [SerializeField] TMP_Text roomCodeText;

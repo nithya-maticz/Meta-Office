@@ -135,23 +135,43 @@ namespace StarterAssets
         {
             // get a reference to our main camera
 
-            nickName.text = PhotonNetwork.NickName;
-            if (_mainCamera == null)
-            {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            }
+            //nickName.text = PhotonNetwork.NickName;
+            //if (_mainCamera == null)
+            //{
+            //    _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            //}
+
+            //pv = GetComponent<PhotonView>();
+
+            //if(pv.IsMine)
+            //{
+            //    manager = FindAnyObjectByType<Manager1>();
+            //    manager.cv.Follow = CinemachineCameraTarget.transform;
+            //   // canvas.SetActive(false);
+
+            //}
+
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
             pv = GetComponent<PhotonView>();
 
-            if(pv.IsMine)
+            if (pv.IsMine)
             {
+                // Local player
+                nickName.text = PhotonNetwork.NickName;
                 manager = FindAnyObjectByType<Manager1>();
                 manager.cv.Follow = CinemachineCameraTarget.transform;
-                canvas.SetActive(false);
 
+                canvas.SetActive(false); // Hide own name
             }
-            
-            
+            else
+            {
+                // Other players
+                nickName.text = pv.Owner.NickName; // Get name of the player who owns this PhotonView
+                canvas.SetActive(true); // Show others' names
+            }
+
+
         }
 
         private void Start()
