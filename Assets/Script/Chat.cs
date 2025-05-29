@@ -1,54 +1,106 @@
 using UnityEngine;
+
 using Photon.Pun;
+
 using TMPro;
 
 public class Chat : MonoBehaviour
+
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     public TMP_InputField inputField;
-    public GameObject myMessage;
-    public GameObject othersMessage;
-    public GameObject content;
+
+    public GameObject myMessage;        // Prefab for your own message
+
+    public GameObject othersMessage;    // Prefab for others' messages
+
+    public GameObject content;          // Scroll content holder
+
     PhotonView PV;
-    //public Manager Manager;
-    public void SendMessage()
-    {
-        
 
-        GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, (PhotonNetwork.NickName +" : " + inputField.text));
-        inputField.text = "";
-    }
     void Start()
+
     {
+
         PV = GetComponent<PhotonView>();
-        print("Name : " + myMessage.name + " " + othersMessage.name);
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SendMessage()
+
     {
-        
+
+        if (!string.IsNullOrEmpty(inputField.text))
+
+        {
+
+            // Format: senderID|nickname: message
+
+            string fullMessage = PhotonNetwork.LocalPlayer.ActorNumber + "|" + PhotonNetwork.NickName + " : " + inputField.text;
+
+            PV.RPC("GetMessage", RpcTarget.All, fullMessage);
+
+            inputField.text = "";
+
+        }
+
     }
+
     [PunRPC]
-    public void GetMessage(string ReceiveMessage)
+
+    public void GetMessage(string rawMessage, PhotonMessageInfo info)
+
     {
-        Debug.Log("MESSSSSS" + ReceiveMessage);
-        if (PV.IsMine)
+
+        Debug.Log("Received Raw Msg: " + rawMessage);
+
+        // Parse: "senderID|message"
+
+        string[] parts = rawMessage.Split('|');
+
+        //if (parts.Length < 2)
+
+        //{
+
+        //    Debug.LogWarning("Malformed message received.");
+
+        //    return;
+
+        //}
+
+        int senderId = int.Parse(parts[0]);
+
+        string messageContent = parts[1];
+        Debug.Log(senderId);
+        Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
+
+        GameObject prefabToUse = (senderId == PhotonNetwork.LocalPlayer.ActorNumber)
+
+            ? myMessage
+
+            : othersMessage;
+
+        GameObject messageObj = Instantiate(prefabToUse, Vector3.zero, Quaternion.identity, content.transform);
+
+        MsgChat msgChat = messageObj.GetComponent<MsgChat>();
+
+        if (msgChat != null && msgChat.message != null)
+
         {
 
-            GameObject M = Instantiate(myMessage, Vector3.zero, Quaternion.identity, content.transform);
-            M.GetComponent<MsgChat>().message.text = ReceiveMessage;
+            msgChat.message.text = messageContent;
 
         }
+
         else
+
         {
-            Debug.Log("Receive Message : " + ReceiveMessage);
-            GameObject M1 = Instantiate(othersMessage, Vector3.zero, Quaternion.identity, content.transform);
-            M1.GetComponent<MsgChat>().message.text = ReceiveMessage;
+
+            Debug.LogError("MsgChat or message field is not assigned properly in prefab.");
 
         }
-    }
 
-    
+    }
 
 }
+

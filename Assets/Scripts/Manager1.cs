@@ -18,6 +18,7 @@ public class Manager1 : MonoBehaviour
     public Transform armachuture;
     public Animator charAvatar;
     public CinemachineVirtualCamera cv;
+    
     //PhotonView PV;
    
 

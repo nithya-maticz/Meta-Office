@@ -5,6 +5,8 @@ using Photon.Realtime;
 using System.Collections.Generic;
 
 using System.IO;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 public class Manager : MonoBehaviourPunCallbacks
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -32,6 +34,23 @@ public class Manager : MonoBehaviourPunCallbacks
     [SerializeField] TMP_Text roomCodeText;
     public string currentRoomCode;
     [SerializeField] TMP_InputField roomCodeInput1;
+    public AudioSource bgSound;
+    public GameObject muteBtn;
+    
+    public Button myBut;
+    public Sprite muteImage;
+    public Sprite unMuteImage;
+    public Image butImage;
+    public AudioSource clickSound;
+    public bool mute;
+    public bool muteMick;
+    public Button myMike;
+    public Sprite muteMickImage;
+    public Sprite unMuteMickImage;
+    public Image muteMikeImage;
+    public GameObject voiceRef;
+    public GameObject CanvasRef;
+
 
 
 
@@ -53,6 +72,7 @@ public class Manager : MonoBehaviourPunCallbacks
     public void playGame()
     {
         print("inside playgae");
+        clickSound.Play();
          if (string.IsNullOrEmpty(playernameInputField.text))
          {
             return;
@@ -109,7 +129,7 @@ public class Manager : MonoBehaviourPunCallbacks
             return;
         }
         PhotonNetwork.CreateRoom(roomnameInputField.text + Random.Range(1000, 9999));
-
+        roomnameInputField.text = "";
         MenuManager.Instance.OpenMenu("loading");
     }
 
@@ -127,6 +147,7 @@ public class Manager : MonoBehaviourPunCallbacks
             ? fullRoomName.Substring(0, fullRoomName.Length - 4)
             : fullRoomName;
 
+        Debug.Log(fullRoomName+ "      "+trimmedRoomName);
         roomNameText.text = trimmedRoomName;
        
         print("Room Name : " + PhotonNetwork.CurrentRoom.Name);
@@ -161,11 +182,14 @@ public class Manager : MonoBehaviourPunCallbacks
         cameras.SetActive(false);
         canvas.SetActive(false);
         canvasGame.SetActive(true);
+        bgSound.Play();
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
         // PhotonNetwork.LoadLevel(1);
     }
     public void LeaveRoom()
     {
+        CanvasRef.SetActive(true);
+        bgSound.volume = 0;
         PhotonNetwork.LeaveRoom();
         MenuManager.Instance.OpenMenu("loading");
     }
@@ -241,7 +265,61 @@ public class Manager : MonoBehaviourPunCallbacks
         {
             JoinRoom(info);
         }
-        
+    }
+
+    public void MuteFun()
+    {
+        butImage = myBut.GetComponent<Image>();
+       
+
+        if (mute==false)
+        {
+            butImage.sprite = muteImage;
+            mute = true;
+            bgSound.volume = 0;
+           
+
+        }
+        else
+        {
+            butImage.sprite = unMuteImage;
+            mute = false;
+            bgSound.volume = 1;
+           
+        }
+       
+    }
+    
+   
+   
+    public void MuteMickFun()
+    {
+       
+        muteMikeImage = myMike.GetComponent<Image>();
+
+        if (muteMick == false)
+        {
+            muteMikeImage.sprite = muteMickImage;
+            muteMick = true;
+            voiceRef.SetActive(false);
+            Debug.Log("false");
+           // bgSound.volume = 0;
+        }
+        else
+        {
+            muteMikeImage.sprite = unMuteMickImage;
+            muteMick = false;
+            voiceRef.SetActive(true);
+            Debug.Log("true");
+
+        }
+    }
+    public void Reset()
+    {
+        bgSound.volume = 1;
+        muteMick = false;
+        mute = false;
+
 
     }
 }

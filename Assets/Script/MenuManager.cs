@@ -3,7 +3,7 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
-
+    public AudioSource clickSound;
     [SerializeField] Menu[] menus;
 
     void Awake()
@@ -28,6 +28,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(Menu menu)
     {
+       
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].open)
