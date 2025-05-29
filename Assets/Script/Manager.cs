@@ -28,6 +28,7 @@ public class Manager : MonoBehaviourPunCallbacks
     public GameObject chatButton;
     public RoomInfo info;
     [SerializeField] TMP_Text hostName;
+    public string nickName;
     [SerializeField] TMP_Text roomCodeText;
     public string currentRoomCode;
     [SerializeField] TMP_InputField roomCodeInput1;
@@ -76,17 +77,15 @@ public class Manager : MonoBehaviourPunCallbacks
     {
 
         print("Joined");
-
         print("OnJoined Lobby");
         MenuManager.Instance.OpenMenu("avatar");
         // MenuManager.Instance.OpenMenu("tittle");
         managerref1.AvatarUIData();
         //  PhotonNetwork.NickName = "Player" + Random.Range(0, 1000).ToString("0000");
         PhotonNetwork.NickName = playernameInputField.text.ToString();
+      //  nickName.text = PhotonNetwork.NickName;
         print("NAME    " + PhotonNetwork.NickName);
-
-
-
+        nickName = PhotonNetwork.NickName;
     }
 
    
